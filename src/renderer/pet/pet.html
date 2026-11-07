@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepWhale 深海小鲸</title>
+  <link rel="stylesheet" href="./pet.css" />
+</head>
+<body>
+  <div id="pet-root">
+    <!-- Overhead Speech & Streaming Bubble -->
+    <div id="speech-bubble" class="interactive-ui" role="status" aria-live="polite">
+      <div class="bubble-top-row">
+        <span id="bubble-badge" class="bubble-badge">🐳 深海小鲸</span>
+        <button id="bubble-close" class="bubble-close" title="收起气泡" type="button">×</button>
+      </div>
+      <div id="bubble-text" class="bubble-text">噗噜噜~ 我游到你的桌面啦！</div>
+      <div id="bubble-footer" class="bubble-footer hidden">
+        <button id="bubble-expand" class="bubble-expand-btn" type="button">打开对话舱查看完整回复 ↗</button>
+      </div>
+    </div>
+
+    <!-- 60fps DeepSeek Whale Canvas Stage -->
+    <div id="stage-wrap">
+      <canvas id="whale-canvas" width="300" height="235"></canvas>
+      <div id="level-pill" class="level-pill">Lv.1</div>
+    </div>
+
+    <!-- Hover Quick Action Toolbar -->
+    <div id="quick-dock" class="quick-dock interactive-ui">
+      <button class="dock-btn" data-action="chat" title="打开 AI 对话舱 (Alt+W)" type="button">
+        <span>💬</span><small>对话</small>
+      </button>
+      <button class="dock-btn" data-action="mini-input" title="直接在这里快速提问" type="button">
+        <span>✨</span><small>快问</small>
+      </button>
+      <button class="dock-btn" data-action="feed" title="投喂算力磷虾 (+活力/+好感)" type="button">
+        <span>🦐</span><small>投喂</small>
+      </button>
+      <button class="dock-btn" id="btn-roam" data-action="roam" title="开启/关闭桌面自由巡游" type="button">
+        <span>🧭</span><small>巡游</small>
+      </button>
+      <button class="dock-btn" data-action="clipboard" title="一键解释/分析剪贴板内容" type="button">
+        <span>📋</span><small>剪贴板</small>
+      </button>
+      <button class="dock-btn" id="btn-sleep" data-action="sleep" title="小憩睡眠 / 唤醒" type="button">
+        <span>💤</span><small>小憩</small>
+      </button>
+    </div>
+
+    <!-- Floating Mini Quick-Ask Input Bar -->
+    <form id="mini-ask-bar" class="mini-ask-bar interactive-ui hidden">
+      <input
+        id="mini-ask-input"
+        type="text"
+        placeholder="跟小鲸说句话… (回车发送 / Esc关闭)"
+        autocomplete="off"
+      />
+      <button id="mini-ask-send" type="submit" title="发送">➤</button>
+    </form>
+  </div>
+
+  <script type="module" src="./pet.js"></script>
+</body>
+</html>

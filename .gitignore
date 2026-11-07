@@ -1,0 +1,9 @@
+node_modules/
+dist/
+out/
+data/*.json
+data/*.bak
+!data/.gitkeep
+.DS_Store
+Thumbs.db
+*.log

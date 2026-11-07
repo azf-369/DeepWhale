@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepWhale · 深海 AI 座舱</title>
+  <link rel="stylesheet" href="./chat.css" />
+</head>
+<body>
+  <div id="cockpit-shell">
+    <!-- Custom Frameless Draggable Titlebar -->
+    <header class="titlebar">
+      <div class="titlebar-brand">
+        <img src="../../../assets/icon.png" alt="DeepWhale" class="brand-logo" />
+        <div class="brand-titles">
+          <div class="brand-name-row">
+            <span class="brand-name">DeepWhale</span>
+            <span id="status-dot" class="status-dot demo" title="当前模式"></span>
+            <span id="status-text" class="status-text">陪伴模式</span>
+          </div>
+          <span class="brand-sub">DeepSeek 鲸鱼桌面智能伴侣</span>
+        </div>
+      </div>
+
+      <div class="titlebar-actions no-drag">
+        <button id="balance-badge" class="balance-badge hidden" title="点击刷新 DeepSeek 账户余额" type="button">
+          💰 --
+        </button>
+        <button id="win-min" class="win-ctrl-btn" title="最小化" type="button">─</button>
+        <button id="win-close" class="win-ctrl-btn close" title="隐藏面板 (Alt+W 可再次呼出)" type="button">✕</button>
+      </div>
+    </header>
+
+    <!-- Top Navigation Tabs -->
+    <nav class="tab-nav no-drag">
+      <button class="tab-btn active" data-tab="chat" type="button">💬 实时对话</button>
+      <button class="tab-btn" data-tab="persona" type="button">🌟 养成与人设</button>
+      <button class="tab-btn" data-tab="settings" type="button">⚙️ API 与设置</button>
+    </nav>
+
+    <!-- TAB 1: Real-Time AI Conversation -->
+    <section id="tab-chat" class="tab-panel active">
+      <div class="chat-toolbar">
+        <div class="model-switch-group">
+          <button id="chip-v3" class="model-chip active" data-model="deepseek-chat" type="button" title="切换至 DeepSeek-V3 快速对话">
+            ⚡ V3 对话
+          </button>
+          <button id="chip-r1" class="model-chip" data-model="deepseek-reasoner" type="button" title="切换至 DeepSeek-R1 深度思考推理">
+            🧠 R1 深度思考
+          </button>
+        </div>
+        <div class="quick-tools">
+          <button id="tool-clip-explain" class="mini-tool-btn" title="读取剪贴板代码或文本并解析" type="button">📋 解读剪贴板</button>
+          <button id="tool-clear" class="mini-tool-btn danger" title="清空当前对话记录" type="button">🗑️ 清空</button>
+        </div>
+      </div>
+
+      <div id="chat-messages" class="chat-messages">
+        <!-- Messages rendered dynamically -->
+      </div>
+
+      <form id="chat-form" class="chat-composer">
+        <textarea
+          id="chat-input"
+          rows="2"
+          placeholder="输入消息与深海小鲸实时对话… (Enter 发送，Shift+Enter 换行)"
+        ></textarea>
+        <div class="composer-actions">
+          <span id="active-persona-hint" class="persona-hint">🐳 深海小鲸 · 元气伴侣</span>
+          <div class="composer-btns">
+            <button id="btn-stop" class="btn-stop hidden" type="button">⏹ 停止</button>
+            <button id="btn-send" class="btn-send" type="submit">发送 ➤</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- TAB 2: Pet Growth & Persona Studio -->
+    <section id="tab-persona" class="tab-panel">
+      <div class="scroll-body">
+        <div class="card growth-card">
+          <div class="growth-header">
+            <div>
+              <h3 id="pet-name-title">🐳 深海小鲸</h3>
+              <p class="muted-sub">多和它聊天、摸头或投喂磷虾可提升羁绊等级</p>
+            </div>
+            <span id="growth-level-badge" class="lv-badge">Lv.1</span>
+          </div>
+
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span>✨ 羁绊经验</span>
+              <div class="bar-track"><div id="bar-exp" class="bar-fill exp" style="width: 25%"></div></div>
+              <small id="val-exp">25/100</small>
+            </div>
+            <div class="stat-row">
+              <span>💙 愉悦心情</span>
+              <div class="bar-track"><div id="bar-mood" class="bar-fill mood" style="width: 90%"></div></div>
+              <small id="val-mood">90%</small>
+            </div>
+            <div class="stat-row">
+              <span>⚡ 深海活力</span>
+              <div class="bar-track"><div id="bar-energy" class="bar-fill energy" style="width: 92%"></div></div>
+              <small id="val-energy">92%</small>
+            </div>
+          </div>
+
+          <div class="counters-grid">
+            <div class="counter-box"><strong id="cnt-chats">0</strong><span>累计对话</span></div>
+            <div class="counter-box"><strong id="cnt-pats">0</strong><span>亲密摸头</span></div>
+            <div class="counter-box"><strong id="cnt-feeds">0</strong><span>投喂磷虾</span></div>
+          </div>
+
+          <div class="pet-fun-btns">
+            <button id="act-feed" class="secondary-btn" type="button">🦐 投喂磷虾</button>
+            <button id="act-spout" class="secondary-btn" type="button">🌊 表演喷水</button>
+            <button id="act-reset-pos" class="secondary-btn" type="button">📍 唤回右下角</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🎭 切换小鲸性格人设</h3>
+          <div id="persona-list" class="persona-list"></div>
+
+          <label class="field-label" for="custom-prompt">自定义专属 System Prompt（留空则使用上方所选人设）</label>
+          <textarea
+            id="custom-prompt"
+            class="field-textarea"
+            rows="3"
+            placeholder="例如：你是一只精通 Rust 与分布式系统的蓝鲸导师，每次回答先给结论再给示例…"
+          ></textarea>
+          <button id="btn-save-persona" class="primary-btn full-mt" type="button">💾 保存人设设置</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: API Key & Companion Preferences -->
+    <section id="tab-settings" class="tab-panel">
+      <div class="scroll-body">
+        <div class="card">
+          <div class="card-title-row">
+            <h3>🔑 AI 大模型接口配置</h3>
+            <a id="link-deepseek-key" href="https://platform.deepseek.com/api_keys" class="ext-link">获取 DeepSeek Key ↗</a>
+          </div>
+          <p class="muted-sub">支持 DeepSeek 官方 V3/R1 及任意 OpenAI 兼容接口</p>
+
+          <div class="preset-pills">
+            <button class="preset-pill" data-preset="deepseek-v3" type="button">DeepSeek V3</button>
+            <button class="preset-pill" data-preset="deepseek-r1" type="button">DeepSeek R1</button>
+            <button class="preset-pill" data-preset="siliconflow" type="button">硅基流动</button>
+            <button class="preset-pill" data-preset="ollama" type="button">本地 Ollama</button>
+          </div>
+
+          <label class="field-label" for="cfg-baseurl">API Base URL</label>
+          <input id="cfg-baseurl" class="field-input" type="text" placeholder="https://api.deepseek.com" />
+
+          <label class="field-label" for="cfg-apikey">API Key</label>
+          <div class="secret-row">
+            <input id="cfg-apikey" class="field-input" type="password" placeholder="sk-..." autocomplete="off" />
+            <button id="toggle-key-vis" class="icon-btn" type="button" title="显示/隐藏 Key">👁️</button>
+          </div>
+
+          <div class="two-col">
+            <div>
+              <label class="field-label" for="cfg-model">模型名称 (Model)</label>
+              <input id="cfg-model" class="field-input" type="text" placeholder="deepseek-chat" />
+            </div>
+            <div>
+              <label class="field-label" for="cfg-temp">采样温度 (<span id="lbl-temp">0.7</span>)</label>
+              <input id="cfg-temp" class="range-input" type="range" min="0" max="1.5" step="0.1" value="0.7" />
+            </div>
+          </div>
+
+          <div class="api-btn-row">
+            <button id="btn-test-api" class="secondary-btn" type="button">🔌 测试连接</button>
+            <button id="btn-check-balance" class="secondary-btn" type="button">💰 查询余额</button>
+            <button id="btn-save-api" class="primary-btn" type="button">💾 保存配置</button>
+          </div>
+
+          <div id="api-feedback" class="api-feedback hidden"></div>
+        </div>
+
+        <div class="card">
+          <h3>🖥️ 桌宠行为与语音偏好</h3>
+
+          <label class="switch-row">
+            <div>
+              <strong>🧭 桌面自由巡游</strong>
+              <small>开启后小鲸会在任务栏上方悠闲左右畅游</small>
+            </div>
+            <input id="pref-roam" type="checkbox" />
+          </label>
+
+          <label class="switch-row">
+            <div>
+              <strong>📌 窗口始终置顶</strong>
+              <small>保持小鲸与对话舱悬浮在其他软件上方</small>
+            </div>
+            <input id="pref-top" type="checkbox" checked />
+          </label>
+
+          <label class="switch-row">
+            <div>
+              <strong>🔊 海洋互动音效</strong>
+              <small>摸头鲸鸣、喷水水泡与投喂提示合成音</small>
+            </div>
+            <input id="pref-sound" type="checkbox" checked />
+          </label>
+
+          <label class="switch-row">
+            <div>
+              <strong>🗣️ AI 回复语音播报 (TTS)</strong>
+              <small>收到回复后使用系统中文语音温柔朗读</small>
+            </div>
+            <input id="pref-tts" type="checkbox" />
+          </label>
+
+          <label class="switch-row">
+            <div>
+              <strong>🔒 专注模式（锁定鼠标完全穿透）</strong>
+              <small>开启后小鲸完全不响应鼠标点击，可通过托盘或本开关恢复</small>
+            </div>
+            <input id="pref-lock" type="checkbox" />
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <script type="module" src="./chat.js"></script>
+</body>
+</html>

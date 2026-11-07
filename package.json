@@ -1,0 +1,27 @@
+{
+  "name": "deepseek-whale-pet",
+  "productName": "DeepWhale 深海小鲸",
+  "version": "1.0.0",
+  "description": "DeepSeek 鲸鱼动画形象桌面宠物 — 支持 60fps 骨骼流体动态交互与实时流式 AI 对话 (V3 / R1)",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "web": "node scripts/web-preview.js",
+    "test": "node scripts/smoke-test.js",
+    "icons": "python scripts/generate-icons.py"
+  },
+  "keywords": [
+    "deepseek",
+    "desktop-pet",
+    "whale",
+    "electron",
+    "ai-companion",
+    "桌宠"
+  ],
+  "author": "DeepWhale Studio",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^34.0.0"
+  }
+}

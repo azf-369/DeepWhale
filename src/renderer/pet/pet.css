@@ -1,0 +1,287 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Segoe UI", system-ui, sans-serif;
+}
+
+#pet-root {
+  position: relative;
+  width: 360px;
+  height: 430px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 8px;
+}
+
+/* --- Overhead Speech Bubble --- */
+#speech-bubble {
+  position: relative;
+  width: 316px;
+  min-height: 58px;
+  max-height: 122px;
+  padding: 9px 12px 10px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(11, 23, 54, 0.92), rgba(17, 38, 86, 0.90));
+  border: 1px solid rgba(96, 165, 250, 0.48);
+  box-shadow:
+    0 10px 26px rgba(6, 16, 44, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  color: #f0f7ff;
+  opacity: 0;
+  transform: translateY(8px) scale(0.95);
+  pointer-events: none;
+  transition: opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 10;
+}
+
+#speech-bubble.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+#speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: rgba(16, 35, 80, 0.93);
+  border-right: 1px solid rgba(96, 165, 250, 0.48);
+  border-bottom: 1px solid rgba(96, 165, 250, 0.48);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.bubble-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.bubble-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7dd3fc;
+  letter-spacing: 0.3px;
+}
+
+.bubble-close {
+  background: transparent;
+  border: none;
+  color: rgba(186, 230, 253, 0.75);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 3px;
+  border-radius: 4px;
+}
+
+.bubble-close:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.bubble-text {
+  font-size: 12.5px;
+  line-height: 1.48;
+  color: #eff6ff;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.bubble-footer {
+  margin-top: 5px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bubble-footer.hidden {
+  display: none;
+}
+
+.bubble-expand-btn {
+  background: rgba(59, 130, 246, 0.24);
+  border: 1px solid rgba(96, 165, 250, 0.45);
+  color: #bae6fd;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.bubble-expand-btn:hover {
+  background: rgba(59, 130, 246, 0.48);
+  color: #ffffff;
+}
+
+/* --- Whale Canvas Stage --- */
+#stage-wrap {
+  position: relative;
+  width: 300px;
+  height: 235px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#whale-canvas {
+  cursor: grab;
+}
+
+#whale-canvas:active {
+  cursor: grabbing;
+}
+
+.level-pill {
+  position: absolute;
+  right: 26px;
+  bottom: 18px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #e0f2fe;
+  background: rgba(15, 38, 92, 0.78);
+  border: 1px solid rgba(96, 165, 250, 0.45);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#pet-root.hovered .level-pill {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Quick Action Dock --- */
+.quick-dock {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(11, 23, 54, 0.88);
+  border: 1px solid rgba(96, 165, 250, 0.42);
+  box-shadow: 0 8px 22px rgba(7, 16, 42, 0.38);
+  opacity: 0;
+  transform: translateY(-4px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.quick-dock.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.dock-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 38px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #dbeafe;
+  cursor: pointer;
+  transition: background 0.16s ease, transform 0.16s ease, color 0.16s ease;
+}
+
+.dock-btn span {
+  font-size: 14px;
+  line-height: 1.1;
+}
+
+.dock-btn small {
+  font-size: 9.5px;
+  margin-top: 1px;
+  opacity: 0.88;
+}
+
+.dock-btn:hover {
+  background: rgba(59, 130, 246, 0.32);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.dock-btn.active {
+  background: rgba(37, 99, 235, 0.58);
+  color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(147, 197, 253, 0.65);
+}
+
+/* --- Floating Mini Ask Bar --- */
+.mini-ask-bar {
+  margin-top: 6px;
+  width: 312px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 6px 5px 12px;
+  border-radius: 999px;
+  background: rgba(11, 23, 54, 0.94);
+  border: 1px solid rgba(56, 189, 248, 0.62);
+  box-shadow: 0 8px 24px rgba(8, 20, 52, 0.46);
+}
+
+.mini-ask-bar.hidden {
+  display: none;
+}
+
+#mini-ask-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #f8fafc;
+  font-size: 12.5px;
+  user-select: text;
+}
+
+#mini-ask-input::placeholder {
+  color: rgba(186, 230, 253, 0.58);
+}
+
+#mini-ask-send {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: #ffffff;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+#mini-ask-send:hover {
+  transform: scale(1.07);
+  filter: brightness(1.1);
+}
